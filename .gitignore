@@ -1,0 +1,4 @@
+.terraform*
+provider.tf
+remote_state.tf
+env.yml
