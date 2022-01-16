@@ -67,7 +67,7 @@ resource "aws_iam_role" "chatbot_role" {
 }
 
 
-resource "aws_cloudformation_stack" "network" {
+resource "aws_cloudformation_stack" "chatbot_slack_config" {
   name          = local.envyml.project_name
   capabilities  = ["CAPABILITY_NAMED_IAM"]
   template_body = <<-STACK
