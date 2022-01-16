@@ -6,6 +6,14 @@ data "external" "function_names" {
   program = ["sh", "-c", "aws lambda list-functions --query 'Functions[].FunctionName' --region ${local.envyml.project_region} --output json --profile ${local.envyml.profile_name} | jq 'INDEX(.)'"]
 }
 
+locals {
+  lambda_function_names = keys(data.external.function_names.result)
+  # lambda_function_names = [
+  #   "akashi-puncher-prod-main",   # github.com/umihico/akashi-puncher
+  #   "portfoliohub-prod-scraping", # github.com/umihico/PortfolioHub
+  # ]
+}
+
 resource "aws_sns_topic" "alarm_topic" {
   name = "${local.envyml.project_name}-alarm-topic"
 }
@@ -22,7 +30,7 @@ module "metric_alarms" {
   namespace     = "AWS/Lambda"
   metric_name   = "Errors"
   statistic     = "Maximum"
-  dimensions    = { for idx, f in keys(data.external.function_names.result) : f => { "FunctionName" = f } }
+  dimensions    = { for idx, f in local.lambda_function_names : f => { "FunctionName" = f } }
   alarm_actions = [aws_sns_topic.alarm_topic.arn]
 }
 
