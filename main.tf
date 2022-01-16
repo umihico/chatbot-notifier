@@ -13,7 +13,7 @@ resource "aws_sns_topic" "alarm_topic" {
 module "metric_alarms" {
   source = "terraform-aws-modules/cloudwatch/aws//modules/metric-alarms-by-multiple-dimensions"
 
-  alarm_name          = "${local.envyml.project_name}-lambda-alarms"
+  alarm_name          = "${local.envyml.project_name}-lambda-alarms-"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   threshold           = 1
@@ -22,7 +22,7 @@ module "metric_alarms" {
   namespace     = "AWS/Lambda"
   metric_name   = "Errors"
   statistic     = "Maximum"
-  dimensions    = { for idx, f in keys(data.external.function_names.result) : "${local.envyml.project_name}-alarm-${f}" => { "FunctionName" = f } }
+  dimensions    = { for idx, f in keys(data.external.function_names.result) : f => { "FunctionName" = f } }
   alarm_actions = [aws_sns_topic.alarm_topic.arn]
 }
 
