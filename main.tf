@@ -7,11 +7,11 @@ data "external" "function_names" {
 }
 
 locals {
-  lambda_function_names = keys(data.external.function_names.result)
-  # lambda_function_names = [
-  #   "akashi-puncher-prod-main",   # github.com/umihico/akashi-puncher
-  #   "portfoliohub-prod-scraping", # github.com/umihico/PortfolioHub
-  # ]
+  # lambda_function_names = keys(data.external.function_names.result) # all functions
+  lambda_function_names = [
+    "akashi-puncher-prod-main",   # github.com/umihico/akashi-puncher
+    "portfoliohub-prod-scraping", # github.com/umihico/PortfolioHub
+  ]
 }
 
 resource "aws_sns_topic" "alarm_topic" {
