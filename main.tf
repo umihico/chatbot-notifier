@@ -3,7 +3,7 @@ locals {
 }
 
 data "external" "function_names" {
-  program = ["sh", "-c", "aws lambda list-functions --query 'Functions[].FunctionName' --output json --profile ${local.envyml.profile_name} | jq 'INDEX(.)'"]
+  program = ["sh", "-c", "aws lambda list-functions --query 'Functions[].FunctionName' --region ${local.envyml.project_region} --output json --profile ${local.envyml.profile_name} | jq 'INDEX(.)'"]
 }
 
 resource "aws_sns_topic" "alarm_topic" {
